@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { DownloadCountService } from './download-count.service';
 import { GetDownloadCountDto } from './dto/get-download-count.dto';
-import { validate } from '../../lib/validate';
 
 @Controller('download-count')
 export class DownloadCountController {
@@ -16,11 +15,6 @@ export class DownloadCountController {
       name,
       ...query,
     };
-
-    const to = new GetDownloadCountDto();
-    to.name = name;
-    to.startDate = query.startDate;
-    to.endDate = query.endDate;
 
     return this.downloadCountService.getDownloadCount(dto);
   }
