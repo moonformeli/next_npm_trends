@@ -1,34 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { DownloadCountService } from './download-count.service';
-import { CreateDownloadCountDto } from './dto/create-download-count.dto';
-import { UpdateDownloadCountDto } from './dto/update-download-count.dto';
+import { GetDownloadCountDto } from './dto/get-download-count.dto';
+import { validate } from '../../lib/validate';
 
 @Controller('download-count')
 export class DownloadCountController {
   constructor(private readonly downloadCountService: DownloadCountService) {}
 
-  @Post()
-  create(@Body() createDownloadCountDto: CreateDownloadCountDto) {
-    return this.downloadCountService.create(createDownloadCountDto);
-  }
+  @Get(':name')
+  async getDownloadCount(
+    @Param('name') name: GetDownloadCountDto['name'],
+    @Query() query: Pick<GetDownloadCountDto, 'startDate' | 'endDate'>,
+  ) {
+    const dto: GetDownloadCountDto = {
+      name,
+      ...query,
+    };
 
-  @Get()
-  findAll() {
-    return this.downloadCountService.findAll();
-  }
+    const to = new GetDownloadCountDto();
+    to.name = name;
+    to.startDate = query.startDate;
+    to.endDate = query.endDate;
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.downloadCountService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDownloadCountDto: UpdateDownloadCountDto) {
-    return this.downloadCountService.update(+id, updateDownloadCountDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.downloadCountService.remove(+id);
+    return this.downloadCountService.getDownloadCount(dto);
   }
 }
