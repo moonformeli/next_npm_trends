@@ -28,7 +28,7 @@ export default class Requester {
 
   get<Response, Request>(config: AxiosRequestConfig<Request>) {
     const { data } = config;
-    const fetcher = this.request<Response, Request>(
+    return this.request<Response, Request>(
       {
         ...config,
         method: config.method,
