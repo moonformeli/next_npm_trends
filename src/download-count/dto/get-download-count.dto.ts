@@ -1,15 +1,10 @@
 import { IsString, IsDateString } from 'class-validator';
-
-interface GetDownloadCountDtoInterface {
-  startDate: string;
-  endDate: string;
-  name: string;
-}
+import type { GetDownloadCountRequest } from 'src/interfaces';
 
 /**
  * @link https://github.com/npm/registry/blob/master/docs/download-counts.md
  */
-export class GetDownloadCountDto implements GetDownloadCountDtoInterface {
+export class GetDownloadCountDto implements GetDownloadCountRequest {
   @IsDateString()
   startDate: string;
 

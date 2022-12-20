@@ -1,42 +1,68 @@
 import type { AxiosResponse } from 'axios';
 
-type Error = object;
 type Kind = 'Left' | 'Right';
-type Left = { data: null; isError: true; error: Error };
+type Left = { data: null; isError: true; error: string };
 type Right<T> = { data: T; isError: false; error: null };
-type ContainerType<T> = Left | Right<T>;
+type ContainerType<L, R> = Left | Right<R>;
 
-class Container {
-  static Validate<T>(d: AxiosResponse<T>): Kind {
-    const { status } = d;
+function assertNull(data: any): asserts data is null {
+  if (data !== null) {
+    throw new Error('data should be null');
+  }
+}
 
-    if (status === 200) {
-      return 'Left';
-    }
-    return 'Right';
+function assertNotNull<T>(data: T): asserts data is NonNullable<T> {
+  if (data === null) {
+    throw new Error('data should not be nullable');
+  }
+}
+
+export default class Container<T> {
+  private readonly v: T;
+  private readonly k: Kind;
+
+  constructor(v: T, k: Kind) {
+    this.v = v;
+    this.k = k;
   }
 
-  static pack<T>(d: AxiosResponse<T>, kind: Kind): ContainerType<T> {
-    const { data } = d;
-    const response = {
-      data: null,
-      isError: true,
-      error: null,
-    };
+  pack() {
+    if (this.k === 'Left') {
+      assertNull(this.v);
+      const response: Left = {
+        data: null,
+        isError: true,
+        error: 'Error',
+      };
 
-    if (kind === 'Left') {
-      response.error = data;
+      return response;
+    } else {
+      assertNotNull<T>(this.v);
+      const response: Right<T> = {
+        data: this.v,
+        isError: false,
+        error: null,
+      };
 
-      return response as Left;
+      return response;
     }
-
-    response.data = data;
-    return response as Right<T>;
   }
 
-  static containify<T>(d: AxiosResponse<T>): ContainerType<T> {
-    const kind = Container.Validate<T>(d);
+  static Left() {
+    return new Container<null>(null, 'Left');
+  }
 
-    return Container.pack<T>(d, kind);
+  static Right<T>(d: T) {
+    return new Container<T>(d, 'Left');
+  }
+
+  static containify<Response, Request>(d: AxiosResponse<Response, Request>) {
+    const { status, data } = d;
+
+    if (status >= 200 && status < 300) {
+      return Container.Right<Response>(data).pack();
+    }
+
+    return Container.Left().pack();
   }
 }
