@@ -1,6 +1,6 @@
 import { validate as validateClass } from 'class-validator';
 
-type DtoClass<T extends Record<string, any>> = { new (): T };
+export type DtoClass<T extends Record<string, any>> = { new (): T };
 export const validate = async <T>(
   Dto: DtoClass<T>,
   data: Record<string, any>,

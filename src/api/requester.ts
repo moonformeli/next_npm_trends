@@ -1,6 +1,7 @@
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
 import Container from 'lib/container';
+import { validate, DtoClass } from 'lib/validate';
 
 export default class Requester {
   private instance: AxiosInstance;
@@ -26,7 +27,13 @@ export default class Requester {
     return Container.containify(axiosResponse);
   }
 
-  get<Response, Request>(config: AxiosRequestConfig<Request>) {
+  protected async validateDto<T>(dto: DtoClass<T>, data: Record<string, any>) {
+    const errors = await validate<T>(dto, data);
+
+    return { isError: errors.length > 0, error: errors };
+  }
+
+  protected get<Response, Request>(config: AxiosRequestConfig<Request>) {
     const { data } = config;
     return this.request<Response, Request>(
       {

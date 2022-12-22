@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { DownloadCountModule } from './npm-count/npm-count.module';
+import { NpmCountModule } from './npm-count/npm-count.module';
 
 @Module({
-  imports: [DownloadCountModule],
+  imports: [NpmCountModule],
 })
 export class AppModule {}

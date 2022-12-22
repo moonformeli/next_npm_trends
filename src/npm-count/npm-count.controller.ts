@@ -6,7 +6,7 @@ import { GetNpmCountDto } from './dto/get-npm-count.dto';
 export class NpmCountController {
   constructor(private readonly npmCountService: NpmCountService) {}
 
-  @Get(':name')
+  @Get(':packageName')
   async getDownloadCount(
     @Param('packageName') packageName: GetNpmCountDto['packageName'],
     @Query() query: Pick<GetNpmCountDto, 'startDate' | 'endDate'>,
