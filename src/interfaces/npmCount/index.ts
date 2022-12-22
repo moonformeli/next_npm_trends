@@ -3,13 +3,13 @@ interface Download {
   day: string;
 }
 
-export interface GetDownloadCountRequest {
+export interface GetNpmCountRequest {
   startDate: string;
   endDate: string;
   packageName: string;
 }
 
-export interface GetDownloadCountReponse {
+export interface GetNpmCountReponse {
   downloads: Download[];
   start: string;
   end: string;

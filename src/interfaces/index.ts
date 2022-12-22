@@ -1,1 +1,1 @@
-export * from './download-count';
+export * from './npmCount';
