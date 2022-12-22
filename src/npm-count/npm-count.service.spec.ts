@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DownloadCountService } from './download-count.service';
+import { NpmCountService } from './npm-count.service';
 
-describe('DownloadCountService', () => {
-  let service: DownloadCountService;
+describe('NpmCountService', () => {
+  let service: NpmCountService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DownloadCountService],
+      providers: [NpmCountService],
     }).compile();
 
-    service = module.get<DownloadCountService>(DownloadCountService);
+    service = module.get<NpmCountService>(NpmCountService);
   });
 
   it('should be defined', () => {
